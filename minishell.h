@@ -6,7 +6,7 @@
 /*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 11:05:59 by tebandam          #+#    #+#             */
-/*   Updated: 2024/07/13 21:16:32 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/26 14:25:32 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -670,5 +670,16 @@ char							which_quote(char **quote);
 int								ft_lstsize_arg(t_argument *argument_to_split);
 t_env							*find_env_by_var_name(t_env *env,
 									const char *var_name);
+void							verif_multi_quote(t_char_list **tmp_char,
+									char **quote, t_bool *quote_in_var,
+									t_bool state);
+int								white_space(t_char_list **tmp_char);
+int								skip_useless_quote(t_char_list **tmp);
+void							ft_sigint(int signal);
+void							ft_sigquit(int signal);
+t_bool							set_append(char *str, int *len_mid);
+void							refresh_env_path(t_env *env, char *var_name);
+void							*close_quote(const char *argument, int *i,
+									t_bool in_quote, t_char_list **chars);
 
 #endif

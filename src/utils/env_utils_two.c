@@ -6,7 +6,7 @@
 /*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:44:21 by tebandam          #+#    #+#             */
-/*   Updated: 2024/07/13 18:40:05 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/26 14:35:08 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,17 @@
 
 void	hide_and_update_env_var(t_env *tmp_env, char *cmd)
 {
-	if (tmp_env->value)
-		free(tmp_env->value);
-	if (!cmd || (cmd && ft_strchr(cmd, '=') != 0))
-		tmp_env->hide = FALSE;
-	else
-		tmp_env->hide = TRUE;
-	if (tmp_env->full_path)
-		free(tmp_env->full_path);
-	tmp_env->full_path = copy(cmd);
-	tmp_env->value = NULL;
+	if (!tmp_env->value)
+	{
+		if (!cmd || (cmd && ft_strchr(cmd, '=') != 0))
+			tmp_env->hide = FALSE;
+		else
+			tmp_env->hide = TRUE;
+		if (tmp_env->full_path)
+			free(tmp_env->full_path);
+		tmp_env->full_path = copy(cmd);
+		tmp_env->value = NULL;
+	}
 }
 
 void	update_env_var(t_env *tmp_env, char *cmd, char *value)
@@ -76,7 +77,7 @@ static int	verif(int i, int len_mid, t_bool append, char *str)
 	return (0);
 }
 
-static t_bool	set_append(char *str, int *len_mid)
+t_bool	set_append(char *str, int *len_mid)
 {
 	if (str[*len_mid - 1] == '+')
 		*len_mid -= 1;

@@ -6,7 +6,7 @@
 /*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:15:39 by tebandam          #+#    #+#             */
-/*   Updated: 2024/07/11 07:53:02 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/22 08:58:06 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,13 @@
 
 int	g_sig = 0;
 
-int	run_readline(t_env *env, t_vars *vars)
+static int	run_readline(t_env *env, t_vars *vars)
 {
 	int	exit;
 
 	exit = ft_readline(&env, vars);
 	if (exit == 1)
-	{
-		ft_lstclear_env(&env);
-		free(vars);
 		return (1);
-	}
 	return (exit);
 }
 

@@ -92,7 +92,8 @@ MY_SOURCES= src/prompt/minishell.c \
 			src/utils/heredoc_utils_two.c \
 			src/utils/error_message.c \
 			src/utils/parsing_expand_arg.c \
-			src/utils/split_arg_utils.c
+			src/utils/split_arg_utils.c \
+			src/utils/split_quote_utils.c
 
 
 MY_OBJECTS=$(MY_SOURCES:.c=.o)
@@ -101,7 +102,7 @@ white='\033[1;37m'
 
 RM=rm -f
 CC=cc
-FLAGS=-Wall -Werror -Wextra -g
+FLAGS=-Wall -Werror -Wextra
 
 MAKEFLAGS += --no-print-directory
 

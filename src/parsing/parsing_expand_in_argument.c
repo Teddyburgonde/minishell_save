@@ -6,7 +6,7 @@
 /*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:20:40 by tebandam          #+#    #+#             */
-/*   Updated: 2024/07/12 13:00:10 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/26 14:27:10 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ static void	*expand_argument_double_quote(const char *argument, int *i,
 {
 	t_char_list	*tmp;
 
-	if (argument[*i] == '"' && in_quote == FALSE)
+	if ((argument[*i] == '"' && in_quote == FALSE)
+		|| (*i == 0 && argument[0] == '"'))
 	{
 		tmp = lst_new_char_list();
 		if (!tmp)
@@ -51,13 +52,8 @@ static void	*expand_argument_double_quote(const char *argument, int *i,
 		return (NULL);
 	if (argument[*i] == '"')
 	{
-		tmp = lst_new_char_list();
-		if (!tmp)
+		if (close_quote(argument, i, in_quote, chars) == NULL)
 			return (NULL);
-		in_quote = FALSE;
-		tmp->value = argument[*i];
-		ft_lstadd_back_char_list(chars, tmp);
-		*i += 1;
 	}
 	return ((void *)1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_expand.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tebandam <tebandam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:33:03 by rgobet            #+#    #+#             */
-/*   Updated: 2024/06/29 20:22:07 by tebandam         ###   ########.fr       */
+/*   Updated: 2024/07/22 08:24:15 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static int	exit_code_redir(char *var_name, t_env *env)
 	t_env	*var;
 
 	var = NULL;
-	if (var_name[0] != '$' && var_name[1] != '?')
+	if (var_name && var_name[0] && var_name[1]
+		&& var_name[1] != '?' && var_name[0] == '$')
 	{
 		var = lst_search_env(var_name, env);
 		if (var == NULL || var->value == NULL
@@ -96,9 +97,7 @@ t_redirection_to_expand	*ft_expand_redirections(
 		tmp = expand_redirections;
 		while (tmp)
 		{
-			if (ambiguous_redirection(error_ambig, env, tmp) == 0
-				&& (tmp->arg[0] == '\'' || tmp->arg[0] == '"'))
-				tmp->arg = ft_remove_simple_quote(tmp->arg);
+			ambiguous_redirection(error_ambig, env, tmp);
 			tmp = tmp->next;
 			error_ambig = error_ambig->next;
 		}

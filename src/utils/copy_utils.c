@@ -6,7 +6,7 @@
 /*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:20:30 by tebandam          #+#    #+#             */
-/*   Updated: 2024/06/29 16:47:44 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/23 11:31:56 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*copy(char *s)
 	if (!tmp)
 		return (NULL);
 	i = 0;
-	while (s[i])
+	while (s && s[i])
 	{
 		tmp[i] = s[i];
 		i++;
@@ -32,20 +32,28 @@ char	*copy(char *s)
 	return (tmp);
 }
 
-static int	count_char(char c, char *str)
+static void	sub_copy_no_quote(char *s, char **tmp, int *i, int *j)
 {
-	int	i;
-	int	count;
+	static char	quote = 0;
 
-	i = 0;
-	count = 0;
-	while (str && str[i])
+	if ((s[*j] == '"' || s[*j] == '\'') && s[*j] == quote)
 	{
-		if (str[i] == c)
-			count++;
-		i++;
+		*j += 1;
+		quote = 0;
 	}
-	return (count);
+	else if (!quote && (s[*j] == '"' || s[*j] == '\''))
+	{
+		quote = s[*j];
+		*j += 1;
+	}
+	else if (s[*j] != 0)
+	{
+		(*tmp)[*i] = s[*j];
+		*j += 1;
+		*i += 1;
+	}
+	if (!s)
+		quote = 0;
 }
 
 char	*copy_without_quote(char *s)
@@ -56,23 +64,13 @@ char	*copy_without_quote(char *s)
 
 	if (!s)
 		return (NULL);
-	tmp = malloc(sizeof(char) * (ft_strlen(s) + 1
-				- count_char('\'', s) - count_char('\"', s)));
+	tmp = malloc(sizeof(char) * (ft_strlen(s) + 1));
 	if (!tmp)
 		return (NULL);
 	i = 0;
 	j = 0;
 	while (s[j])
-	{
-		if (s[j] == '"' || s[j] == '\'')
-			j++;
-		if (s[j] != 0 && s[j] != '"' && s[j] != '\'')
-		{
-			tmp[i] = s[j];
-			j++;
-			i++;
-		}
-	}
+		sub_copy_no_quote(s, &tmp, &i, &j);
 	tmp[i] = 0;
 	return (tmp);
 }

@@ -6,7 +6,7 @@
 /*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 20:01:11 by tebandam          #+#    #+#             */
-/*   Updated: 2024/07/13 18:53:45 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/23 09:14:15 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,33 +31,24 @@ void	fill_no_quote_arg(t_char_list **tmp_char,
 	}
 }
 
-void	which_quote_is(char **quote, char *quoted,
-	t_bool *quote_in_var, int i)
+int	skip_useless_quote(t_char_list **tmp)
 {
-	if ((*quote)[i] == '"' && (*quoted == (*quote)[i]
-		|| *quoted == 0) && *quote_in_var == TRUE)
+	char		quote;
+	t_char_list	*tmp_char;
+
+	quote = 0;
+	tmp_char = *tmp;
+	if (tmp_char && (tmp_char->value == '"'
+			|| tmp_char->value == '\''))
 	{
-		*quoted = 0;
-		*quote_in_var = FALSE;
+		quote = tmp_char->value;
+		if (tmp_char->next && quote == tmp_char->next->value)
+		{
+			*tmp = (*tmp)->next->next;
+			return (1);
+		}
 	}
-	else if ((*quote)[i] == '"' && (*quoted == (*quote)[i]
-		|| *quoted == 0) && *quote_in_var == FALSE)
-	{
-		*quoted = (*quote)[i];
-		*quote_in_var = TRUE;
-	}
-	if ((*quote)[i] == '\'' && (*quoted == (*quote)[i]
-		|| *quoted == 0) && *quote_in_var == TRUE)
-	{
-		*quoted = 0;
-		*quote_in_var = FALSE;
-	}
-	else if ((*quote)[i] == '\'' && (*quoted == (*quote)[i]
-		|| *quoted == 0) && *quote_in_var == FALSE)
-	{
-		*quoted = (*quote)[i];
-		*quote_in_var = TRUE;
-	}
+	return (0);
 }
 
 int	function_verif_quote(t_char_list **tmp_char, char **quote,
@@ -65,18 +56,27 @@ int	function_verif_quote(t_char_list **tmp_char, char **quote,
 {
 	int		i;
 	char	quoted;
+	t_bool	state;
 
 	i = 0;
 	quoted = 0;
+	state = *quote_in_var;
+	while (state == FALSE && skip_useless_quote(tmp_char) == 1)
+		continue ;
+	if (!(*tmp_char))
+		return (*quote_in_var);
 	while ((*quote) && (*quote)[i])
 		i++;
 	((*quote))[i] = (*tmp_char)->value;
 	i = 0;
+	*quote_in_var = FALSE;
 	while ((*quote) && (*quote)[i])
 	{
-		which_quote_is(quote, &quoted, quote_in_var, i);
+		if ((*tmp_char)->was_in_a_variable == FALSE)
+			which_quote_is(quote, &quoted, quote_in_var, i);
 		i++;
 	}
+	verif_multi_quote(tmp_char, quote, quote_in_var, state);
 	return (*quote_in_var);
 }
 
@@ -101,9 +101,6 @@ static t_argument	*ft_get_last_pos(t_argument *lst)
 t_bool	init_function(char **quote, t_argument **tmp,
 	t_argument	**splitted_arguments, t_argument *argument_to_split)
 {
-	t_bool	in_quote;
-
-	in_quote = FALSE;
 	(void)quote;
 	*splitted_arguments = lst_new_argument();
 	if (!*splitted_arguments)
@@ -112,5 +109,5 @@ t_bool	init_function(char **quote, t_argument **tmp,
 	*tmp = ft_get_last_pos(*tmp);
 	if (*tmp == NULL)
 		*tmp = argument_to_split;
-	return (in_quote);
+	return (FALSE);
 }

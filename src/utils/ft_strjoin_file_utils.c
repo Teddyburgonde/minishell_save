@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin_file_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tebandam <tebandam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:00:23 by tebandam          #+#    #+#             */
-/*   Updated: 2024/06/21 19:53:58 by tebandam         ###   ########.fr       */
+/*   Updated: 2024/07/22 07:53:02 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ void	copy_content(char *tab, const char *s1, int len)
 	int	i;
 
 	i = 0;
-	while (s1 && i < len)
+	while (s1 && s1[i] && i < len + 2
+		&& s1[i] != SPACE && s1[i] != NEWLINE && s1[i] != TAB
+		&& s1[i] != '|' && s1[i] != '>' && s1[i] != '<')
 	{
 		tab[i] = s1[i];
 		i++;

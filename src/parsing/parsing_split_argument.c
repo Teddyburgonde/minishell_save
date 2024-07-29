@@ -6,19 +6,20 @@
 /*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:56:30 by tebandam          #+#    #+#             */
-/*   Updated: 2024/07/13 21:08:20 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/23 09:12:07 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
 static void	fill_in_quote_arg(t_char_list **tmp_char,
-	t_char_list **splitted_chars, char quote)
+	t_char_list **splitted_chars, char **str, t_bool *in_quote)
 {
 	t_char_list	*arg;
 
 	arg = NULL;
-	if (*tmp_char && (*tmp_char)->value != quote)
+	(void)in_quote;
+	if (*tmp_char && (*tmp_char)->value != which_quote(str))
 	{
 		arg = lst_new_char_list();
 		if (!arg)
@@ -29,7 +30,15 @@ static void	fill_in_quote_arg(t_char_list **tmp_char,
 		(*tmp_char)->last_pos = FALSE;
 		*tmp_char = (*tmp_char)->next;
 	}
-	else if (*tmp_char && (*tmp_char)->value == quote)
+	else if (*tmp_char && (*tmp_char)->next
+		&& (*tmp_char)->value == which_quote(str)
+		&& (*tmp_char)->next->value == which_quote(str))
+	{
+		(*str)[ft_strlen(*str)] = (*tmp_char)->next->value;
+		*tmp_char = (*tmp_char)->next->next;
+		*in_quote = FALSE;
+	}
+	else if (*tmp_char && (*tmp_char)->value == which_quote(str))
 		*tmp_char = (*tmp_char)->next;
 }
 
@@ -88,13 +97,16 @@ void	fill_not_expand_arg(t_char_list **tmp_char,
 			i++;
 			if (function_verif_quote(tmp_char, quote, in_quote) == 1)
 				continue ;
+			if ((*tmp_char) && white_space(tmp_char) == 1)
+				break ;
 			fill_no_quote_arg(tmp_char, splitted_chars, which_quote(quote));
 		}
 		while (*tmp_char && *in_quote == TRUE)
 		{
 			if (!i && function_verif_quote(tmp_char, quote, in_quote) == 0)
 				continue ;
-			fill_in_quote_arg(tmp_char, splitted_chars, which_quote(quote));
+			fill_in_quote_arg(tmp_char, splitted_chars, quote, in_quote);
+			i = 0;
 		}
 	}
 }
@@ -111,7 +123,7 @@ int	ft_split_argument(t_argument *argument_to_split,
 	in_quote = init_function(&quote, &tmp, &splitted_arguments,
 			argument_to_split);
 	quote = ft_calloc(sizeof(char),
-			ft_lstsize_arg(argument_to_split) + 1);
+			ft_lstsize_arg(argument_to_split) + 100);
 	if (!quote)
 		return (1);
 	set_var(tmp, &tmp_char);

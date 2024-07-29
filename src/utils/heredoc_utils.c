@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*   By: tebandam <tebandam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:59:39 by rgobet            #+#    #+#             */
-/*   Updated: 2024/07/10 09:12:02 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/26 08:58:18 by tebandam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	heredoc_setup(t_redirection *redirection,
 	pid_t	child;
 	int		wstatus;
 
+	signal(SIGQUIT, SIG_IGN);
 	child = fork();
 	if (child == 0)
 	{
@@ -98,4 +99,5 @@ void	heredoc_setup(t_redirection *redirection,
 		if (vars->exit_code == 130)
 			g_sig = SIGINT + 128;
 	}
+	signal(SIGQUIT, &ft_sigquit);
 }

@@ -6,7 +6,7 @@
 /*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 21:06:13 by rgobet            #+#    #+#             */
-/*   Updated: 2024/07/13 21:08:38 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/23 12:14:42 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ t_bool	is_not_in_quote(char *quote, t_char_list *tmp)
 			quoted = TRUE;
 		i++;
 	}
-	if ((tmp->value == '\'' || tmp->value == '"') && quoted == TRUE)
+	if (tmp && (tmp->value == '\'' || tmp->value == '"') && quoted == TRUE)
 		quoted = FALSE;
-	if ((tmp->value == '\'' || tmp->value == '"') && quoted == FALSE)
+	if (tmp && (tmp->value == '\'' || tmp->value == '"') && quoted == FALSE)
 		quoted = TRUE;
 	return (quoted);
 }

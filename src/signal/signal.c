@@ -3,32 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*   By: tebandam <tebandam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 00:07:22 by tebandam          #+#    #+#             */
-/*   Updated: 2024/07/10 11:09:19 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/26 08:58:36 by tebandam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void	ft_sigint(int signal)
+void	ft_sigint(int signal)
 {
 	(void)signal;
 	printf("\n");
 }
 
-static void	ft_sigquit(int signal)
+void	ft_sigquit(int signal)
 {
 	(void)signal;
-	g_sig = 131;
+	g_sig = signal + 128;
 	printf("Quit\n");
 }
 
 void	ft_ctrl_c(int signal)
 {
 	(void)signal;
-	g_sig = 130;
+	g_sig = signal + 128;
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -48,6 +48,7 @@ void	set_interactive_mode(int set)
 	{
 		signal(SIGINT, &ft_sigint);
 		signal(SIGQUIT, &ft_sigquit);
+		signal(SIGINT, &ft_ctrl_c);
 		return ;
 	}
 	if (set == 3)

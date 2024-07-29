@@ -6,7 +6,7 @@
 /*   By: rgobet <rgobet@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 11:21:36 by rgobet            #+#    #+#             */
-/*   Updated: 2024/07/13 14:38:42 by rgobet           ###   ########.fr       */
+/*   Updated: 2024/07/26 14:26:38 by rgobet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,19 @@ t_bool	is_not_in_double_quote(char *str, int x)
 		i++;
 	}
 	return (in_db_quote);
+}
+
+void	*close_quote(const char *argument, int *i,
+	t_bool in_quote, t_char_list **chars)
+{
+	t_char_list	*tmp;
+
+	tmp = lst_new_char_list();
+	if (!tmp)
+		return (NULL);
+	in_quote = FALSE;
+	tmp->value = argument[*i];
+	ft_lstadd_back_char_list(chars, tmp);
+	*i += 1;
+	return ((void *)1);
 }
